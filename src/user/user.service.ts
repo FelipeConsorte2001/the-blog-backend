@@ -74,6 +74,7 @@ export class UserService {
 
     return this.save(user);
   }
+
   async updatePassword(id: string, dto: UpdatePasswordDto) {
     const user = await this.findOneByOrFail({ id });
 
@@ -89,5 +90,11 @@ export class UserService {
     user.forceLogout = true;
 
     return this.save(user);
+  }
+
+  async remove(id: string) {
+    const user = this.findOneByOrFail({ id });
+    await this.userRepository.delete({ id });
+    return user;
   }
 }
