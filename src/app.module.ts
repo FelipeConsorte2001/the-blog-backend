@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { PostModule } from './post/post.module';
 import { UserModule } from './user/user.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -32,10 +33,12 @@ import { UserModule } from './user/user.module';
           password: process.env.DB_PASSWORD,
           database: process.env.DB_DATABASE,
           synchronize: process.env.DB_SYNCHRONIZE === '1',
+          // entities: [User, Post],
           autoLoadEntities: process.env.DB_AUTO_LOAD_ENTITIES === '1',
         };
       },
     }),
+    UploadModule,
   ],
 })
 export class AppModule {}
