@@ -42,7 +42,7 @@ export class AllexceptionsFilter implements ExceptionFilter {
       }
     }
 
-    return response.status(400).json({
+    return response.status(status).json({
       message: messages,
       erro: erroName,
       statusCode: status,
