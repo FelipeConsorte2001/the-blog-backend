@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { AllexceptionsFilter } from './common/filters/all-exceptions.filter';
@@ -16,6 +17,15 @@ import { UserModule } from './user/user.module';
     AuthModule,
     UserModule,
     PostModule,
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 10000,
+          limit: 10,
+          blockDuration: 5000,
+        },
+      ],
+    }),
     TypeOrmModule.forRootAsync({
       useFactory: () => {
         if (process.env.DB_TYPE === 'better-sqlite3') {
@@ -42,6 +52,9 @@ import { UserModule } from './user/user.module';
     }),
     UploadModule,
   ],
-  providers: [{ provide: APP_FILTER, useClass: AllexceptionsFilter }],
+  providers: [
+    { provide: APP_FILTER, useClass: AllexceptionsFilter },
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+  ],
 })
 export class AppModule {}
