@@ -29,6 +29,12 @@ export class PostController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async findAllOwned(@Req() req: AuthenticatedRequest) {
+    const posts = await this.postService.findAllOwned(req.user);
+    return posts.map(post => new PostResponseDto(post));
+  }
+
   @Get(':slug')
   async findOnePublished(@Param('slug') slug: string) {
     const post = await this.postService.findOneOrFail({
@@ -37,19 +43,12 @@ export class PostController {
     });
     return new PostResponseDto(post);
   }
-  @UseGuards(JwtAuthGuard)
+
   @Get('')
   async findAllPublished() {
-    const post = await this.postService.findOneOrFail({
+    const posts = await this.postService.findAll({
       published: true,
     });
-    return new PostResponseDto(post);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('me')
-  async findAllOwned(@Req() req: AuthenticatedRequest) {
-    const posts = await this.postService.findAllOwned(req.user);
     return posts.map(post => new PostResponseDto(post));
   }
 

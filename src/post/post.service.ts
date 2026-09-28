@@ -23,6 +23,7 @@ export class PostService {
       title: dto.title,
       content: dto.content,
       excerpt: dto.excerpt,
+      coverImageUrl: dto.coverImageUrl,
       slug: createSlugFromText(dto.title),
       author,
     });
